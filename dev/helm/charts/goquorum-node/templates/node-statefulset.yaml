@@ -147,6 +147,8 @@ spec:
         prometheus.io/port: {{ .Values.node.quorum.metrics.pprofport | quote}}
         prometheus.io/path: "/debug/metrics/prometheus"        
     spec:
+      securityContext:
+        runAsUser: 0
       serviceAccountName: {{ include "goquorum-node.fullname" . }}-sa
       containers:
 
@@ -181,6 +183,8 @@ spec:
             mountPath: {{ .Values.node.tessera.dataPath }}
           - name: tessera-peers
             mountPath: /config/tessera-peers
+        securityContext:
+          privileged: true
         ports:
           - name: tessera
             containerPort: {{ .Values.node.tessera.port }}
@@ -303,6 +307,8 @@ spec:
             readOnly: true
           - name: data
             mountPath: {{ .Values.node.quorum.dataPath }}
+        securityContext:
+          privileged: true
         ports:
           - name: json-rpc
             containerPort: {{ .Values.node.quorum.rpc.port }}
